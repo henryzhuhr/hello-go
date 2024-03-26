@@ -1,0 +1,19 @@
+{
+  "name": "hello-ho",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "HenryZhuHR <296506195@qq.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@vuepress/client": "2.0.0-rc.0",
+    "vue": "^3.4.5",
+    "vuepress": "2.0.0-rc.0"
+  }
+}
