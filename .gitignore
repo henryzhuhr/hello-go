@@ -25,5 +25,9 @@ go.work
 node_modules
 .temp
 .cache
-.idea
+
+# Goland
+.idea 
+
 pkg/
+bin/
