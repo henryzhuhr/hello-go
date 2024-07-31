@@ -40,7 +40,7 @@ go get -v -u github.com/peterh/liner github.com/derekparker/delve/cmd/dlv
 注意:修改"dlv-cert"证书, 选择"显示简介"->"信任"->"代码签名" 修改为: 始终信任
 
 打开首选项-工作区设置,配置launch.json:
-```
+```json
 {
     "version": "0.2.0",
     "configurations": [
@@ -59,4 +59,18 @@ go get -v -u github.com/peterh/liner github.com/derekparker/delve/cmd/dlv
         }
     ]
 }
+```
+
+
+拉取私有仓库
+
+Go 1.13 版本后，拉取私有仓库的方式发生了变化，需要配置环境变量，否则会报错
+
 ```shell
+export GOPRIVATE=github.com/<username>
+```
+同时由于 `go get` 默认使用的是 https 协议，如果你的私有仓库是 ssh 协议，需要配置 `~/.gitconfig` 文件，添加如下配置
+
+```shell
+git config --global url."git@git.xxx.com".insteadOf "https://git.xxx.com/"
+```

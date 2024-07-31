@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/henryzhuhr/hello-go/router"
+	"github.com/henryzhuhr/gin-demo/router"
 )
 
 func main() {

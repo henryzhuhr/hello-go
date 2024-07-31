@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/henryzhuhr/hello-go/controllers"
+	"github.com/henryzhuhr/gin-demo/controllers"
 )
 
 // Router 路由配置，返回 *gin.Engine
