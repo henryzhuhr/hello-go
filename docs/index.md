@@ -1,4 +1,4 @@
-# Hello VuePress
+# Hello Go
 
 
 ## 开发环境
@@ -28,8 +28,7 @@ vscode 还有一项很强大的功能就是断点调试,结合 delve 可以很�
 
 ```shell
 go get -v -u github.com/peterh/liner github.com/derekparker/delve/cmd/dlv
-
-brew install go-delve/delve/delve (mac可选)
+brew install go-delve/delve/delve # mac 可以使用 brew 安装
 ```
 
 如果有问题再来一遍:
@@ -73,4 +72,24 @@ export GOPRIVATE=github.com/<username>
 
 ```shell
 git config --global url."git@git.xxx.com".insteadOf "https://git.xxx.com/"
+```
+
+## 语法
+
+### 数组和切片
+
+
+```go
+array1 := [3]int{}             // 定义数组
+array2 := [3]int{1, 2, 3}      // 初始化数组
+array3 := [...]int{1, 2, 3}    // 初始化数组，不指定长度
+array4 := [5]int{1: 10, 3: 30} // 指定下标初始化
+
+// 遍历数组
+for i := 0; i < len(array4); i++ {
+    fmt.Print(array4[i], ", ")
+}
+for j, v := range array4 {
+    fmt.Print(j, ":", v, ", ")
+}
 ```

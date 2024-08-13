@@ -35,10 +35,10 @@ func main() { // main函数，是程序执行的入口
 	/*
 		数组 array
 	*/
-	array1 := [3]int{}             //定义数组
-	array2 := [3]int{1, 2, 3}      //初始化数组
-	array3 := [...]int{1, 2, 3}    //初始化数组，不指定长度
-	array4 := [5]int{1: 10, 3: 30} //指定下标初始化
+	array1 := [3]int{}             // 定义数组
+	array2 := [3]int{1, 2, 3}      // 初始化数组
+	array3 := [...]int{1, 2, 3}    // 初始化数组，不指定长度
+	array4 := [5]int{1: 10, 3: 30} // 指定下标初始化
 
 	fmt.Println(array1, array2, array3, array4)
 
