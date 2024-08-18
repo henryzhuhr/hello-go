@@ -23,12 +23,19 @@ const sidebar: DefaultTheme.Sidebar = [
       { text: 'Go 的基础语法', link: '/grammar' },
     ]
   },
+  {
+    text: '语言进阶',
+    items: [
+      { text: '异常处理', link: '/advance/exception_handling.md' },
+    ]
+  },
 ]
 
 /**
  * 主题配置: https://vitepress.dev/zh/reference/default-theme-config
  */
 const themeConfig: DefaultTheme.Config = {
+  logo: '/go.svg',
   // nav: [
   //   { text: 'Home', link: '/' },
   //   { text: 'Examples', link: '/markdown-examples' }
@@ -37,7 +44,16 @@ const themeConfig: DefaultTheme.Config = {
   socialLinks: [
     { icon: 'github', link: 'https://henryzhuhr.github.io/hello-go/' }
   ],
+  darkModeSwitchLabel: '外观',          // 用于自定义深色模式开关标签
+  lightModeSwitchTitle: '切换到浅色模式', // 用于自定义悬停时显示的浅色模式开关标题
+  darkModeSwitchTitle: '切换到深色模式',  // 用于自定义悬停时显示的深色模式开关标题
+  returnToTopLabel: '返回顶部',          // 用于自定义返回顶部按钮的标题
+  langMenuLabel: '选择语言',             // 用于自定义语言选择菜单的标题
   externalLinkIcon: true,
+  docFooter: {
+    prev: '⏪️ 上一页',
+    next: '下一页 ⏩️'
+  },
   footer: {
     message: 'Powered By <a href="https://vitepress.dev/">Vitepress</a>',
     copyright: `All rights reserved © 2024-${new Date().getFullYear()} <a href="https://github.com/HenryZhuHR?tab=repositories">HenryZhuHR</a>`
@@ -46,7 +62,7 @@ const themeConfig: DefaultTheme.Config = {
     label: '页面导航'
   },
   lastUpdated: {
-    text: '最后更新于',
+    text: '⏰ 内容最后更新于',
     formatOptions: {
       dateStyle: 'short',
       timeStyle: 'medium'
@@ -63,4 +79,8 @@ export default defineConfig({
   title: "Hello Go",
   description: "Go Learning Log",
   themeConfig: themeConfig,
+  lastUpdated: true,
+  vite: {// Vite 配置选项
+    publicDir: '../.vitepress/public', // 相对于 docs 目录
+  },
 })
