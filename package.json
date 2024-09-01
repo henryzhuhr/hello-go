@@ -1,9 +1,10 @@
 {
-  "name": "hello-ho",
+  "name": "@henryzhuhr/hello-go",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
-  "author": "HenryZhuHR <296506195@qq.com>",
+  "author": "henryzhuhr <henry.zhuhr@icloud.com> (https://github.com/henryzhuhr)",
+  "repository": "github:henryzhuhr/hello-go",
   "license": "Apache-2.0",
   "scripts": {
     "docs:dev": "vitepress dev --host",

@@ -5,28 +5,36 @@ import { DefaultTheme, defineConfig } from 'vitepress'
  */
 const sidebar: DefaultTheme.Sidebar = [
   {
-    text: '首页',
-    items: [
-      { text: '首页', link: '/' },
-    ]
-  },
-  {
+    collapsed: false,
     text: '环境准备',
+    base: '/starter/',
     items: [
       { text: 'Go 的安装', link: '/install' },
-      { text: 'Go 的包管理', link: '/pkg-management' },
+      { text: 'Go 多版本管理', link: '/multi-version' },
     ]
   },
   {
+    collapsed: false,
+    text: 'Go 工具链',
+    base: '/toolchain/',
+    items: [
+      { text: 'Go 环境变量', link: '/env' },
+      { text: 'Go 包管理', link: '/mod' },
+    ]
+  },
+  {
+    collapsed: false,
     text: '语言基础',
     items: [
       { text: 'Go 的基础语法', link: '/grammar' },
     ]
   },
   {
+    collapsed: false,
     text: '语言进阶',
+    base: '/advance/',
     items: [
-      { text: '异常处理', link: '/advance/exception_handling.md' },
+      { text: '异常处理', link: '/exception_handling' },
     ]
   },
 ]
@@ -36,11 +44,7 @@ const sidebar: DefaultTheme.Sidebar = [
  */
 const themeConfig: DefaultTheme.Config = {
   logo: '/go.svg',
-  // nav: [
-  //   { text: 'Home', link: '/' },
-  //   { text: 'Examples', link: '/markdown-examples' }
-  // ],
-  sidebar: sidebar,
+  sidebar: sidebar, // 侧边栏配置
   socialLinks: [
     { icon: 'github', link: 'https://henryzhuhr.github.io/hello-go/' }
   ],

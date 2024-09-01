@@ -134,10 +134,8 @@
 }
 
 /**
- * 自定义
+ * 在侧边栏的每一个链接前添加点
  * -------------------------------------------------------------------------- */
-
-// 在侧边栏的每一个链接前添加点
 .VPSidebarItem.level-1.is-link {
   .VPLink::before {
     content: "•";
@@ -147,5 +145,29 @@
 
   .text {
     padding-left: 10px;
+  }
+}
+
+.VPSidebarItem.level-1.is-link.is-active {
+  .VPLink::before {
+    color: var(--vp-c-brand-1);
+  }
+}
+
+/**
+ * 页面导航栏的第二级标题前添加点
+ * -------------------------------------------------------------------------- */
+.VPDocAsideOutline ul.VPDocOutlineItem.root {
+  // .outline-link::before {
+  //   content: "• ";
+  //   color: var(--vp-input-border-color);
+  // }
+
+  .outline-link.active {
+    color: var(--vp-c-brand-1);
+  }
+
+  .outline-link.active::before {
+    color: var(--vp-c-brand-1);
   }
 }
