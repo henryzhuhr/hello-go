@@ -20,21 +20,35 @@ const sidebar: DefaultTheme.Sidebar = [
     items: [
       { text: 'Go 环境变量', link: '/env' },
       { text: 'Go 包管理', link: '/mod' },
+      // { text: '跨服务 全链路追踪', link: '/OpenTelemetry' },
+      // { text: '格式化', link: '/gofmt' },
     ]
   },
   {
     collapsed: false,
     text: '语言基础',
+    base: '/basics/', // 子文档全部从二级标题，便于合并到一整个文档，`outline: [3,6]`
     items: [
-      { text: 'Go 的基础语法', link: '/grammar' },
+      { text: '函数', link: '/function' },
+      { text: '结构体', link: '/struct' },
+      { text: '接口', link: '/interface' },
+      { text: '异常处理', link: '/exception_handling' },
     ]
   },
   {
     collapsed: false,
-    text: '语言进阶',
-    base: '/advance/',
+    text: '标准库',
+    base: '/stdlib/',
     items: [
-      { text: '异常处理', link: '/exception_handling' },
+      { text: '命令行参数解析', link: '/flag' },
+    ]
+  },
+  {
+    collapsed: false,
+    text: '开源项目',
+    base: '/3rdparty/',
+    items: [
+      { text: 'go-zero 微服务框架', link: '/gozero/gozero' },
     ]
   },
 ]
