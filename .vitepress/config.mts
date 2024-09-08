@@ -32,7 +32,8 @@ const sidebar: DefaultTheme.Sidebar = [
       { text: '函数', link: '/function' },
       { text: '结构体', link: '/struct' },
       { text: '接口', link: '/interface' },
-      { text: '异常处理', link: '/exception_handling' },
+      { text: '错误', link: '/error' },
+      { text: '并发', link: '/concurrency' },
     ]
   },
   {

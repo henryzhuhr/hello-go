@@ -68,6 +68,8 @@
   --vp-c-danger-2: var(--vp-c-red-2);
   --vp-c-danger-3: var(--vp-c-red-3);
   --vp-c-danger-soft: var(--vp-c-red-soft);
+
+
 }
 
 /**
@@ -123,6 +125,24 @@
   --vp-custom-block-tip-text: var(--vp-c-text-1);
   --vp-custom-block-tip-bg: var(--vp-c-brand-soft);
   --vp-custom-block-tip-code-bg: var(--vp-c-brand-soft);
+}
+
+:root {
+  // TIP 的背景色 覆盖
+  --vp-custom-block-tip-bg: #e6f6e6;
+  --vp-custom-block-tip-code-bg: #00940026;
+  .custom-block.tip code {
+    color: #004200;
+  }
+}
+
+.dark {
+  // 深色模式下 TIP 的背景色 覆盖
+  --vp-custom-block-tip-bg: #004200; // 003100
+  --vp-custom-block-tip-code-bg: #00940026;
+  .custom-block.tip code {
+    color: #00d500;
+  }
 }
 
 /**

@@ -78,3 +78,7 @@ export GOPRIVATE=github.com/<username>
 ```shell
 git config --global url."git@git.xxx.com".insteadOf "https://git.xxx.com/"
 ```
+
+## 参考资料
+
+- [Go Module详细使用教程，包管理不在难-腾讯云开发者社区-腾讯云](https://cloud.tencent.com/developer/article/1593734)
