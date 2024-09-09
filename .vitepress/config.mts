@@ -29,36 +29,36 @@ const sidebar: DefaultTheme.Sidebar = [
     text: '语言基础',
     base: '/basics/', // 子文档全部从二级标题，便于合并到一整个文档，`outline: [3,6]`
     items: [
-      { text: '函数', link: '/function' },
+      // { text: '函数', link: '/function' },
       { text: '结构体', link: '/struct' },
-      { text: '接口', link: '/interface' },
+      // { text: '接口', link: '/interface' },
       { text: '错误', link: '/error' },
       { text: '并发', link: '/concurrency' },
     ]
   },
-  {
-    collapsed: false,
-    text: '标准库',
-    base: '/stdlib/',
-    items: [
-      { text: '命令行参数解析', link: '/flag' },
-    ]
-  },
-  {
-    collapsed: false,
-    text: '开源项目',
-    base: '/3rdparty/',
-    items: [
-      { text: 'go-zero 微服务框架', link: '/gozero/gozero' },
-    ]
-  },
+  // {
+  //   collapsed: false,
+  //   text: '标准库',
+  //   base: '/stdlib/',
+  //   items: [
+  //     // { text: '命令行参数解析', link: '/flag' },
+  //   ]
+  // },
+  // {
+  //   collapsed: false,
+  //   text: '第三方库',
+  //   base: '/3rdparty/',
+  //   items: [
+  //     // { text: 'go-zero 微服务框架', link: '/gozero/gozero' },
+  //   ]
+  // },
 ]
 
 /**
  * 主题配置: https://vitepress.dev/zh/reference/default-theme-config
  */
 const themeConfig: DefaultTheme.Config = {
-  logo: '/go.svg',
+  logo: '/motorcycle.svg',
   sidebar: sidebar, // 侧边栏配置
   socialLinks: [
     { icon: 'github', link: 'https://henryzhuhr.github.io/hello-go/' }
