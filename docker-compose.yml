@@ -1,0 +1,17 @@
+
+services:
+  hello-go-development:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile
+    image: hello-go-development:latest  # 构建后镜像的名称和标签
+    environment:
+      APP_NAME: "hello-go"
+    volumes:
+      - .:/root/hello-go
+      - ~/.ssh:/root/.ssh
+    working_dir: /root/hello-go
+    net_mode: host # 开发环境使用 host 网络模式，方便调试
+    # sleep infinity 用于保持容器运行，否则 vscode 无法进入容器，建议写在 .devcontainer/docker-compose.yml 文件中
+    command: ["sleep", 'infinity']
+ 
