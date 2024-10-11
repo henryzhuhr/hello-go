@@ -44,12 +44,12 @@
 				"MS-CEINTL.vscode-language-pack-zh-hans",
 				"yzhang.markdown-all-in-one",
 				"mhutchie.git-graph",
-				"waderyan.gitblame",
+				"donjayamanne.githistory"
 				"ms-vscode-remote.remote-containers",
 				"ms-azuretools.vscode-docker",
 				"golang.Go",
-				"xiaoxin-technology.goctl"
-				
+				"xiaoxin-technology.goctl",
+				"cweijan.vscode-database-client2",
 			]
 		}
 	}
