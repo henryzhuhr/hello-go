@@ -1,0 +1,21 @@
+// 指定 protobuf 的版本，proto3 是最新的语法版本
+syntax = "proto3";
+
+// 生成go代码相关的选项，是必须的，否则无法生成go代码
+option go_package = "./;hello";
+
+// 定义 Greet 服务，包含一个 SayHello 方法
+service Greeter {
+  // 定义 SayHello 方法，接收一个 HelloRequest 消息，返回一个 HelloReply 消息
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+// 使用 message 定义消息格式以及字段，可以看成 Go 语言中的结构体
+// 定义请求数据结构
+message HelloRequest {
+  string name = 1;  // string 类型的字段 name, 序号为1
+}
+// 定义响应数据结构
+message HelloReply {
+  string message = 1; // string 类型的字段 message, 序号为1
+}

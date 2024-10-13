@@ -82,8 +82,262 @@ brew install clang-format # MacOS
 ## gRPC 四种通信模式
 
 gRPC 提供了四种主要的通信模式：**普通模式**、**服务器流式**、**客户端流式**和**双向流式**。每种模式都有不同的特点和适用场景:
-- **普通模式 (Unary RPC)**：单一请求-单一响应的模式。客户发起请求，并等待服务器响应，这是最简单的 RPC 模式，适用于请求和响应数据量较小的场景。
+- **一元RPC (Unary RPC)**：单一请求-单一响应的模式。客户端发起请求，服务器返回一个响应，和调用函数一样
 - **服务器流式 (Server-side streaming RPC)**：客户端发起请求，服务器返回一个流，客户端从流中读取数据，直到流中没有任何消息，适用于服务器返回的数据量较大，客户端无法一次性接收的场景。
 - **客户端流式 (Client-side streaming RPC)**：客户端发起一个流，服务器返回一个响应，客户端继续发送数据，适用于客户端发送的数据量较大，服务器无法一次性接收的场景。
 - **双向流式 (Bidirectional streaming RPC)**：客户端和服务器之间建立一个双向流，客户端和服务器可以同时发送和接收数据，适用于客户端和服务器需要同时发送和接收数据的场景。
 
+### 一元 RPC 
+
+一元RPC (Unary RPC)，指客户端发起请求，服务器返回一个响应，和调用函数一样。这是最简单的 RPC 模式，客户端发起请求，服务器返回一个响应，适用于请求和响应数据量较小的场景。
+
+参考官方的 [gRPC Hello World](https://github.com/grpc/grpc-go/tree/master/examples/helloworld) 示例，需要完成以下步骤以完成一个简单的 gRPC 服务：
+1. 定义服务接口：需要编写 `.proto` 文件定义服务接口和数据结构，然后使用 `protoc` 编译器生成 Go 代码。
+2. 编写服务端代码
+3. 编写客户端代码
+4. 分别运行服务端和客户端
+
+#### 定义服务接口
+
+RPC 服务需要从编写基于 protobuf 语法规范的 `.proto` 文件开始，该文件规定了服务接口形式、交互消息格式，而不涉及任何有关服务具体功能代码的编写，然后使用 `protoc` 编译器生成对应语言的代码。
+
+protobuf 语法具体参考 [Protobuf 语法指南](https://colobu.com/2015/01/07/Protobuf-language-guide/)
+
+```bash
+src/framework/grcp/unary
+└── proto
+    └── hello.proto # 定义服务接口
+```
+
+例如 `hello.proto` 文件定义了一个简单的服务接口：
+```proto
+// 指定 protobuf 的版本，proto3 是最新的语法版本
+syntax = "proto3";
+// 包名，可以不需要
+package helloworld;
+// 生成go代码相关的选项，是必须的，否则无法生成go代码
+option go_package = "./;helloworld";
+
+// 定义 Greet 服务，包含一个 SayHello 方法
+service Greeter {
+  // 定义 SayHello 方法，接收一个 HelloRequest 消息，返回一个 HelloReply 消息
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+// 使用 message 定义消息格式以及字段，可以看成 Go 语言中的结构体
+// 定义请求数据结构
+message HelloRequest {
+  string name = 1;  // string 类型的字段 name, 序号为1
+}
+// 定义响应数据结构
+message HelloReply {
+  string message = 1; // string 类型的字段 message, 序号为1
+}
+```
+
+`syntax = "proto3";` 指定了使用的 protobuf 版本，proto3 是最新的语法版本，如果不指定版本则可能会报错
+```proto
+syntax = "proto3";
+```
+
+`option go_package` 指定生成的Go代码在你项目中的导入路径，例如下面的代码表示生成的Go代码在当前目录 `.` 下，包名为 `proto`：
+```proto
+option go_package = "./;proto";
+```
+
+用 `service` 定义服务接口，并在其中定义一个 `rpc` 方法，`rpc` 方法接收一个消息类型，返回一个消息类型：
+```proto
+service ServiceName {
+  rpc MethodName (RequestType) returns (ResponseType) {}
+}
+```
+
+`message` 定义消息格式以及字段，可以看成 Go 语言中的结构体：
+```proto
+message MessageName {
+  FieldType FieldName = 1; // 字段类型 字段名 = 序号
+  FieldType FieldName = 2;
+}
+```
+
+
+随后就可以使用 `protoc` 编译器生成 Go 代码：
+```bash
+protoc --go_out=. --go_opt=paths=source_relative \
+  --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+  src/framework/grcp/unary/proto/hello.proto
+```
+
+执行上述命令生成两个文件 `hello.pb.go` 和 `hello_grpc.pb.go`，分别对应 `.proto` 文件中定义的**消息类型**和**服务接口**：
+```bash
+└── proto
+    ├── hello_grpc.pb.go  # 生成的 gRPC 服务代码
+    ├── hello.pb.go       # 生成的 Go 代码
+    └── hello.proto       # 定义服务接口
+```
+
+上面的命令表示：
+- `--go_out` 指定 `xxpb.go` 文件的生成路径
+- `--go-grpc_out` 指定 gRPC 服务定义生成的 Go 代码 `xx_grpc.pb.go` 文件的生成路径
+- `--go_opt` 是一个选项，例如可以指定生成的 Go 代码的包路径与源文件的相对路径一致，即 `paths=source_relative`
+- `--go-grpc_opt` 则是 `xx_grpc.pb.go` 文件的选项
+- `src/framework/grcp/unary/proto/hello.proto`：输入 `proto` 文件路径
+
+生成的 `hello.pb.go` 和 `hello_grpc.pb.go` 文件中包含了定义的消息类型和服务接口的 Go 代码，可以在服务端和客户端代码中引用。
+
+其中 `hello_grpc.pb.go` 文件包括了客户端和服务器的接口 `GreeterClient` 和 `GreeterServer`，以及服务接口的实现 `UnimplementedGreeterServer`：
+```go
+// GreeterClient is the client API for Greeter service.
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+// 定义 Greet 服务，包含一个 SayHello 方法
+type GreeterClient interface {
+	// 定义 SayHello 方法，接收一个 HelloRequest 消息，返回一个 HelloReply 消息
+	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+}
+
+// GreeterServer is the server API for Greeter service.
+// All implementations must embed UnimplementedGreeterServer for forward compatibility.
+// 定义 Greet 服务，包含一个 SayHello 方法
+type GreeterServer interface {
+	// 定义 SayHello 方法，接收一个 HelloRequest 消息，返回一个 HelloReply 消息
+	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
+	mustEmbedUnimplementedGreeterServer()
+}
+```
+
+接下来需要编写服务端和客户端代码，实现服务接口。
+
+#### 编写服务端代码
+
+
+```bash
+src/framework/grcp/unary
+├── proto
+│   ├── hello_grpc.pb.go  # 生成的 gRPC 服务代码
+│   ├── hello.pb.go       # 生成的 Go 代码
+│   └── hello.proto       # 定义服务接口
+└── server/main.go  # 服务端启动代码
+```
+
+`server.go` 文件中实现了服务接口 `GreeterServer` 并启动一个 gRPC 服务：
+
+
+首先是 实现服务接口部分
+```go
+package main
+import (
+  // 其他的一些包
+	//引入 proto 包并重命名包名，也可以使用 hello
+	pb "github.com/henryzhuhr/hello-go/src/framework/grcp/unary/proto"
+)
+// 定义服务，用于实现服务接口
+type GreeterServer struct {
+  pb.UnimplementedGreeterServer
+}
+// 实现 SayHello 方法
+func (s *GreeterServer) SayHello(ctx context.Context, request *pb.HelloRequest) (*pb.HelloReply, error) {
+	fmt.Println("收到一个 grpc 请求，请求参数：", request)
+	return &pb.HelloReply{Message: "Hello " + request.Name}, nil
+}
+```
+
+`GreeterServer` 的结构体中包含一个 `pb.UnimplementedGreeterServer`，表示未实现的服务接口，如果没有实现服务接口，编译器会报错。
+
+然后在 `main` 函数中启动一个 gRPC 服务：
+```go
+func main() {
+	// 监听端口，创建一个 gRPC 服务
+	lis, err := net.Listen("tcp", 50051)
+	if err != nil { log.Fatalf("failed to listen: %v", err) }
+
+	// 创建一个 gRPC 服务
+	grpcServer := grpc.NewServer()
+	// 也可以设置单次接受和发送消息的最大值
+	// grpcServer := grpc.NewServer(
+	// 	grpc.MaxRecvMsgSize(1024*1024*4),   // 1024*1024*4 bytes (4M)
+	// 	grpc.MaxSendMsgSize(math.MaxInt32), // 2147483647 bytes (2G)
+	// )
+
+	// 将自己实现的 GreeterServer 服务注册到 gRPC 服务中
+	pb.RegisterGreeterServer(grpcServer, &GreeterServer{})
+
+	// 启动 gRPC 服务
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+```
+
+::: details 服务端代码 `src/framework/grcp/unary/server/main.go` 完整代码
+<<< @/../src/framework/grcp/unary/server/main.go
+:::
+
+#### 编写客户端代码
+
+```bash
+src/framework/grcp/unary
+├── proto
+│   ├── hello_grpc.pb.go
+│   ├── hello.pb.go
+│   └── hello.proto
+├── client/main.go
+└── server/main.go
+```
+
+`client.go` 文件中实现了一个简单的 gRPC 客户端，向服务端发送请求并接收响应：
+```go
+var (
+	addr = flag.String("addr", "localhost:50051", "the address to connect to")
+	name = flag.String("name", "world", "Name to greet")
+)
+func main() {
+	flag.Parse()
+	// 连接 RPC 服务器
+	conn, err := grpc.NewClient(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil { log.Fatalf("did not connect: %v", err) }
+	// 延迟关闭连接
+	defer conn.Close()
+
+	// 初始化一个 Greeter 客户端
+	c := pb.NewGreeterClient(conn)
+
+	// 初始化上下文，设置请求超时时间为1秒
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	// 延迟关闭请求会话
+	defer cancel()
+
+	// 调用SayHello接口，发送一条消息
+	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: *name})
+	if err != nil { log.Fatalf("could not greet: %v", err) }
+	// 打印服务的返回的消息
+	log.Printf("Greeting: %s", r.GetMessage())
+}
+```
+
+
+::: details 客户端代码 `src/framework/grcp/unary/client/main.go` 完整代码
+<<< @/../src/framework/grcp/unary/client/main.go
+:::
+
+#### 运行服务
+
+首先在一个终端中启动服务端：
+```bash
+go run src/framework/grcp/unary/server/main.go
+```
+再另一个新终端中启动客户端：
+```bash
+go run src/framework/grcp/unary/client/main.go
+```
+
+然后客户端会输出服务端返回的消息，就像是调用一个函数一样：
+```bash
+# 服务端的终端输出
+Received a gRPC request, request parameters: name:"world"
+# 客户端的终端输出
+Greeting: Hello world
+```
+## 参考
+
+- [Protobuf 语法指南](https://colobu.com/2015/01/07/Protobuf-language-guide/)
+- [GRPC (2): 四种通信模式‍ - Canghaimingue的文章 - 知乎](https://zhuanlan.zhihu.com/p/547806941)：以订单管理系统为例
