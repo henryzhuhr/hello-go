@@ -4,15 +4,17 @@ ARG MIRRORS_URL="mirrors.ustc.edu.cn"
 ENV DEBIAN_FRONTEND=noninteractive
 RUN sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' ${HOME}/.bashrc
 RUN sed -i -e "s#//.*archive.ubuntu.com#//${MIRRORS_URL}#g" -e "s#//ports.ubuntu.com#//${MIRRORS_URL}#g" /etc/apt/sources.list.d/ubuntu.sources && \
-    apt-get update && apt-get upgrade -y && \
+    apt-get update && \
+    # apt-get upgrade -y && \
     apt-get install -y \
     ca-certificates locales \
     git \
-    vim \
+    vim tree \
+    nodejs npm \
     postgresql-client \
     mysql-client \
     # TODO 安装指定版本的 go
-    golang
+    golang protobuf-compiler
 
 # 系统时间错误导致: `tls: failed to verify certificate: x509: certificate signed by unknown authority`
 # 修改时区 (date -R 检查当前时间)
@@ -23,6 +25,7 @@ RUN localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
 ENV LANG=zh_CN.UTF-8
 
 RUN set -x && \
+    echo "export PATH=$PATH:$(go env GOPATH)/bin" >> ${HOME}/.bashrc && \
     go env -w GO111MODULE=on && \
     go env -w GOPROXY=https://goproxy.cn,direct && \
     go install golang.org/x/tools/gopls@latest && \
@@ -31,7 +34,9 @@ RUN set -x && \
     go install github.com/josharian/impl@latest && \
     go install github.com/haya14busa/goplay/cmd/goplay@latest && \
     go install github.com/go-delve/delve/cmd/dlv@latest && \
-    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest && \
+    go install google.golang.org/protobuf/cmd/protoc-gen-go@latest && \
+    go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 RUN set -x && \
     npm config set registry https://registry.npmmirror.com && \
