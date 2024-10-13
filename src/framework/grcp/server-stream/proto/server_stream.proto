@@ -1,0 +1,20 @@
+// 语法版本为 protobuf3
+syntax = "proto3";
+
+// 生成go代码相关的选项，是必须的，否则无法生成go代码
+option go_package = "./;server_stream_rpc";
+
+// 定义发送请求消息结构
+message StreamRequest{
+    string data = 1;
+}
+
+// 定义流式响应消息结构
+message StreamResponse{
+    string stream_value = 1;
+}
+
+// 服务端流式rpc，只要在响应数据前加stream（可定义多个服务,每个服务可定义多个接口）
+service ValueStream{
+    rpc GetValueStream(StreamRequest) returns (stream StreamResponse){};
+}

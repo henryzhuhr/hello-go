@@ -337,6 +337,133 @@ Received a gRPC request, request parameters: name:"world"
 # 客户端的终端输出
 Greeting: Hello world
 ```
+
+
+### 服务器流式 RPC
+
+服务器流式 RPC (Server-side streaming RPC)，客户端在其中向服务器发送请求，并获取流以读取回一系列消息。客户端从返回的流中读取，直到没有更多消息为止。gRPC保证在单个RPC调用中对消息进行排序。
+
+
+#### 定义服务接口
+
+```proto
+syntax = "proto3";
+option go_package = "./;server_stream_rpc";
+// 定义发送请求消息结构
+message StreamRequest{
+    string data = 1;
+}
+// 定义流式响应消息结构
+message StreamResponse{
+    string stream_value = 1;
+}
+// 服务端流式rpc，只要在响应数据前加stream（可定义多个服务,每个服务可定义多个接口）
+service StreamServer{
+    rpc ListValue(StreamRequest) returns (stream StreamResponse){};
+}
+```
+
+生成 Go 代码：
+```bash
+protoc --go_out=. --go_opt=paths=source_relative \
+  --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+  src/framework/grcp/server-stream/proto/server_stream.proto
+```
+
+#### 编写服务端代码
+
+服务端代码需要实现的是 `StreamServer` 服务接口中的 `GetValueStream` 方法，该方法接收一个 `StreamRequest` 消息，返回一个 `StreamResponse` 流。
+```go
+// StreamServer 服务端定义我们的服务
+type StreamServer struct {
+	pb.UnimplementedValueStreamServer
+}
+// 实现 proto 中定义的 GetValueStream 方法
+func (s *StreamServer) GetValueStream(
+	req *pb.StreamRequest, // 接收客户端请求
+	stream pb.ValueStream_GetValueStreamServer, // 服务端流式处理
+) error {
+  // 循环发送消息
+	for i := 0; i < 5; i++ {
+		res := fmt.Sprintf("Hello %s, %d", req.Data, i)
+		err := stream.Send(&pb.StreamResponse{StreamValue: res})
+		if err != nil {
+			log.Printf("send error: %v", err)
+			return err
+		}
+		log.Printf("send: %s", res)
+	}
+	return nil
+}
+```
+上述只是实现服务的部分，启动服务的代码与前一个例子类似，可以查看完整代码：
+
+::: details 客户端代码 `src/framework/grcp/server-stream/server/main.go` 完整代码
+<<< @/../src/framework/grcp/server-stream/server/main.go
+:::
+
+#### 编写客户端代码
+
+
+这里只给出调用部分的代码
+```go
+func main() {
+	// ...
+	// 初始化一个 NewValueStream 客户端
+	rpcClient := pb.NewValueStreamClient(conn)
+
+	// 调用 GetValueStream 接口，发送一条消息
+	req := &pb.StreamRequest{Data: *name}
+	rpcStream, err := rpcClient.GetValueStream(context.Background(), req)
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+
+	for {
+		resp, err := rpcStream.Recv()
+		// 如果流已经结束，退出循环
+		if err == io.EOF {
+			log.Println("Stream response is EOF")
+			break
+		}
+		if err != nil {
+			log.Fatalf("Cannot receive stream response: %v", err)
+		}
+		// 打印服务的返回的消息
+		log.Printf("Stream value: %s", resp.StreamValue)
+	}
+}
+```
+
+完整代码：
+
+::: details 客户端代码 `src/framework/grcp/server-stream/client/main.go` 完整代码
+<<< @/../src/framework/grcp/server-stream/client/main.go
+:::
+
+
+#### 运行服务
+
+首先在一个终端中启动服务端：
+```bash
+go run src/framework/grcp/server-stream/server/main.go
+```
+再另一个新终端中启动客户端：
+```bash
+go run src/framework/grcp/server-stream/client/main.go
+```
+
+然后客户端会输出服务端返回的消息，就像是调用一个函数一样：
+```bash
+# 服务端的终端输出
+send: Hello world, 0
+...
+send: Hello world, 5
+# 客户端的终端输出
+Stream value: Hello world, 0
+...
+Stream value: Hello world, 5
+```
 ## 参考
 
 - [Protobuf 语法指南](https://colobu.com/2015/01/07/Protobuf-language-guide/)
