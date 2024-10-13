@@ -36,22 +36,14 @@ const sidebar: DefaultTheme.Sidebar = [
       { text: '并发', link: '/concurrency' },
     ]
   },
-  // {
-  //   collapsed: false,
-  //   text: '标准库',
-  //   base: '/stdlib/',
-  //   items: [
-  //     // { text: '命令行参数解析', link: '/flag' },
-  //   ]
-  // },
-  // {
-  //   collapsed: false,
-  //   text: '第三方库',
-  //   base: '/3rdparty/',
-  //   items: [
-  //     // { text: 'go-zero 微服务框架', link: '/gozero/gozero' },
-  //   ]
-  // },
+  {
+    collapsed: false,
+    text: '框架',
+    base: '/framework/',
+    items: [
+      { text: 'gRPC', link: '/grpc/grpc' },
+    ]
+  },
 ]
 
 /**
