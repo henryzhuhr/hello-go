@@ -32,3 +32,7 @@ RUN set -x && \
     go install github.com/haya14busa/goplay/cmd/goplay@latest && \
     go install github.com/go-delve/delve/cmd/dlv@latest && \
     go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+RUN set -x && \
+    npm config set registry https://registry.npmmirror.com && \
+    npm install -g pnpm
