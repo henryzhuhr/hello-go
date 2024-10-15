@@ -8,7 +8,8 @@ RUN sed -i -e "s#//.*archive.ubuntu.com#//${MIRRORS_URL}#g" -e "s#//ports.ubuntu
     apt-get install -y \
     ca-certificates locales \
     git \
-    vim \
+    vim tree \
+    nodejs npm \
     postgresql-client \
     mysql-client \
     # TODO 安装指定版本的 go
