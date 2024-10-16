@@ -29,6 +29,7 @@ const sidebar: DefaultTheme.Sidebar = [
     text: '语言基础',
     base: '/basics/', // 子文档全部从二级标题，便于合并到一整个文档，`outline: [3,6]`
     items: [
+      { text: '数据结构', link: '/datastruct' },
       // { text: '函数', link: '/function' },
       { text: '结构体', link: '/struct' },
       // { text: '接口', link: '/interface' },
