@@ -8,7 +8,7 @@ RUN sed -i -e "s#//.*archive.ubuntu.com#//${MIRRORS_URL}#g" -e "s#//ports.ubuntu
     apt-get install -y \
     ca-certificates locales \
     git \
-    vim tree \
+    vim tree bash-completion \
     nodejs npm \
     postgresql-client \
     mysql-client \
@@ -22,6 +22,9 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 # 如果没有 zh_CN.UTF-8 执行 locale-gen zh_CN.UTF-8 && dpkg-reconfigure locales && locale -a
 RUN localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
 ENV LANG=zh_CN.UTF-8
+
+# bash 自动补全
+RUN echo ". /etc/bash_completion" >> ${HOME}/.bashrc
 
 RUN set -x && \
     go env -w GO111MODULE=on && \
