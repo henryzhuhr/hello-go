@@ -36,14 +36,15 @@ const sidebar: DefaultTheme.Sidebar = [
       { text: '并发', link: '/concurrency' },
     ]
   },
-  // {
-  //   collapsed: false,
-  //   text: '标准库',
-  //   base: '/stdlib/',
-  //   items: [
-  //     // { text: '命令行参数解析', link: '/flag' },
-  //   ]
-  // },
+  {
+    collapsed: false,
+    text: '标准库',
+    base: '/stdlib/',
+    items: [
+      // { text: '命令行参数解析', link: '/flag' },
+      { text: 'json解析', link: '/json' },
+    ]
+  },
   // {
   //   collapsed: false,
   //   text: '第三方库',
