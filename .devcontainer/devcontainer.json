@@ -42,14 +42,16 @@
 				"GitHub.copilot-chat",
 				"PKief.material-icon-theme",
 				"MS-CEINTL.vscode-language-pack-zh-hans",
+				"bierner.markdown-preview-github-styles",
 				"yzhang.markdown-all-in-one",
 				"mhutchie.git-graph",
-				"donjayamanne.githistory"
+				"donjayamanne.githistory",
 				"ms-vscode-remote.remote-containers",
 				"ms-azuretools.vscode-docker",
 				"golang.Go",
 				"xiaoxin-technology.goctl",
 				"cweijan.vscode-database-client2",
+				"RobertOstermann.inline-parameters-extended"
 			]
 		}
 	}
