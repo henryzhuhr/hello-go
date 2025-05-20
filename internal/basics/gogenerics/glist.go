@@ -11,15 +11,36 @@ func (n *GListNode[T]) Data() T {
 	return n.data
 }
 
+// GListIterator 迭代器
+// 这个迭代器的作用是方便地遍历链表中的元素。
+type GListIterator[T any] struct {
+	current *GListNode[T]
+}
+
+// NewGListIterator 创建一个新的迭代器
+func (l *GList[T]) NewGListIterator() *GListIterator[T] {
+	return &GListIterator[T]{current: l.head}
+}
+
+// HasNext 检查是否还有下一个元素
+func (it *GListIterator[T]) HasNext() bool {
+	return it.current != nil
+}
+
+// Next 返回当前元素并移动到下一个元素
+func (it *GListIterator[T]) Next() T {
+	if it.current == nil {
+		panic("no more elements")
+	}
+	data := it.current.data
+	it.current = it.current.next
+	return data
+}
+
 type GList[T any] struct {
 	head *GListNode[T]
 	size int
 }
-
-// ListIterator 迭代器
-// type ListIterator[T any] struct {
-// 	current *ListNode[T]
-// }
 
 // NewGList 创建一个链表
 func NewGList[T any]() *GList[T] {
