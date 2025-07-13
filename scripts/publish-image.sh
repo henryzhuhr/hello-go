@@ -23,10 +23,13 @@ REGISTRY_NAMESPACE="henryzhuhr"                     # Docker Hub 用户名
 # 版本标签配置
 VERSION_TAG=${VERSION:-"latest"}
 GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
-BUILD_TIME=$(date -u +"%Y%m%d-%H%M%S")
+BUILD_TIME=$(date -u +"%Y%m%d%H%M%S")
+BUILD_TIME=$(date +"%Y%m%d%H%M%S")
+BUILD_TIMESTAMP=$(date +%s)
 
 # 完整镜像名称
 FULL_IMAGE_NAME="${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${IMAGE_NAME}"
+FULL_IMAGE_NAME="${REGISTRY_NAMESPACE}/${IMAGE_NAME}"
 
 # =============================================================================
 # 工具函数
@@ -81,6 +84,7 @@ build_image() {
         -t "${FULL_IMAGE_NAME}:${VERSION_TAG}" \
         -t "${FULL_IMAGE_NAME}:${GIT_COMMIT}" \
         -t "${FULL_IMAGE_NAME}:${BUILD_TIME}" \
+        -t "${FULL_IMAGE_NAME}:${BUILD_TIMESTAMP}" \
         --build-arg BUILD_TIME="$BUILD_TIME" \
         --build-arg GIT_COMMIT="$GIT_COMMIT" \
         "$BUILD_CONTEXT"
@@ -92,13 +96,24 @@ build_image() {
 show_image_info() {
     print_info "镜像构建信息:"
     echo "  镜像名称: ${FULL_IMAGE_NAME}"
-    echo "  版本标签: ${VERSION_TAG}, ${GIT_COMMIT}, ${BUILD_TIME}"
+    echo "  版本标签: ${VERSION_TAG}, ${GIT_COMMIT}, ${BUILD_TIME}, ${BUILD_TIMESTAMP}"
     echo "  构建时间: $(date)"
     echo "  Git提交: ${GIT_COMMIT}"
     
     # 显示镜像大小
-    IMAGE_SIZE=$(docker images "${FULL_IMAGE_NAME}:${VERSION_TAG}" --format "table {{.Size}}" | tail -n 1)
-    echo "  镜像大小: ${IMAGE_SIZE}"
+    IMAGE_SIZE_BYTES=$(docker inspect --format='{{.Size}}' "${FULL_IMAGE_NAME}:${VERSION_TAG}" 2>/dev/null)
+    IMAGE_SIZE=$(awk -v bytes="$IMAGE_SIZE_BYTES" '
+        BEGIN {
+        # 单位顺序要正确：从小到大
+        split("Bytes KB MB GB TB", units);
+        u = 1
+        while (bytes >= 1024 && u < 5) {
+            bytes /= 1024
+            u++
+        }
+        printf "%.2f %s\n", bytes, units[u]
+        }')
+    echo "  镜像大小: ${IMAGE_SIZE_BYTES} bytes = ${IMAGE_SIZE}"
 }
 
 # 推送镜像到仓库
@@ -245,3 +260,7 @@ FULL_IMAGE_NAME="${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${IMAGE_NAME}"
 
 # 执行主函数
 main
+
+# echo "docker981029" | docker login -u henryzhuhr --password-stdin\
+
+--password

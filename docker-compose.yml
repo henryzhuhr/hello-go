@@ -4,6 +4,10 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile
+      args:
+        - GO_VERSION=1.24
+        - USE_MIRROR=1 # 使用自定义镜像源
+        - CLEAN_APT_CACHE=0 # 清理 apt 缓存
     image: hello-go:latest  # 构建后镜像的名称和标签
     environment:
       APP_NAME: "hello-go"
