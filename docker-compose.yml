@@ -10,7 +10,7 @@ services:
     volumes:
       - "~/.ssh:/root/.ssh:ro" # 挂载宿主机的ssh配置文件，方便推拉代码（只读）
       - "/etc/localtime:/etc/localtime:ro" # 挂载宿主机时间到容器
-      - .:/root/app      # 挂载宿主机的项目目录到容器中
-    working_dir: /root/app
+      - .:/root/hello-go
+    working_dir: /root/hello-go
     command: ["sleep", 'infinity']
  
