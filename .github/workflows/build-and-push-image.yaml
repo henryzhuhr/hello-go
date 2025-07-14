@@ -4,11 +4,11 @@ on:
   # release:
   #   types: [published]
   push:
-    tags:
-      - 'v*' # 匹配所有以 v 开头的 tag，例如 v1.0.0
-    branches:
-      - main
-      - dev
+    # tags:
+    #   - 'v*' # 匹配所有以 v 开头的 tag，例如 v1.0.0
+    # branches:
+    #   - main
+    #   - dev
     
 env:
   REGISTRY: ghcr.io
